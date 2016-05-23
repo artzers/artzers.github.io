@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.1.6">Jekyll</generator><link href="https://artzers.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://artzers.github.io/" rel="alternate" type="text/html" /><updated>2016-05-24T01:52:25+08:00</updated><id>https://artzers.github.io/</id><title>artzers</title><subtitle>High Performance</subtitle><entry><title>线性、位置不变退化图像的复原基础</title><link href="https://artzers.github.io/tuxiangfuyuan/" rel="alternate" type="text/html" title="线性、位置不变退化图像的复原基础" /><published>2016-05-23T00:00:00+08:00</published><updated>2016-05-23T00:00:00+08:00</updated><id>https://artzers.github.io/tuxiangfuyuan</id><content type="html" xml:base="https://artzers.github.io/tuxiangfuyuan/">&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;
-
-&lt;h1 id=&quot;centercenter&quot;&gt;&lt;center&gt;线性、位置不变退化图像的复原基础&lt;/center&gt;&lt;/h1&gt;
-&lt;p&gt;　　如果图像不仅包含噪声，还包含对原图的变化（退化），那么目标图像的函数为:$g(x,y)=h(f(x,y))+n(x,y)$，其中h是图像退化函数。如果$h(af1(x,y)+bf2(x,y))=ah(f1(x,y))+ bh(f2(x,y))$，那么说明退化函数是线性的；如果不考虑噪声，有$h(f(x+a,y+b))=g(x+a,y+b)$，那么说明退化函数是位置不变的，目标图像像素的位置和原图的是同步的。我们如果能够去除噪声，然后取h退化函数的逆操作，那么就可以还原回原始图像。&lt;br /&gt;
-　　h退化函数可能是一个非常复杂的函数，局部空间滤波算子难以表示这种退化形式，亦难以求得逆变换对应的算子；而在频域上的则相对容易表示。二维数字图像是一种离散系统，每个像素点(a,b)可以表示为f(x,y)与δ(x-a,y-b)的卷积。在一维情况下有：&lt;script type=&quot;math/tex&quot;&gt;f(a)=\sum_{-\infty}^{\infty}f(x)\delta(x-a) \\
-　　g(a)=\sum_{-\infty}^{\infty}h[f(x)\delta(x-a)] = \sum_{-\infty}^{\infty}f(x)h[\delta(x-a)]&lt;/script&gt;
-　　注意这里h是线性位置不变的算子。经过类似变换，目标图像表示为$g(x,y)=f(x,y)*h(x,y)+n(x,y)$，在频域下有$G(u,v)=F(u,v)H(u,v)+N(u,v)$，这说明频域下图像复原是一个简单的初级运算，求得G就得到原图。但是实际使用的时候，我们很难得知噪声n和作用于原图的算子h，获取这些信息需要依靠工程师常年的经验和直觉。在获取噪声和作用于原图的算子信息之后，可以使用以下滤波方法复原图像:&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.1.6">Jekyll</generator><link href="https://artzers.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://artzers.github.io/" rel="alternate" type="text/html" /><updated>2016-05-24T02:03:36+08:00</updated><id>https://artzers.github.io/</id><title>artzers</title><subtitle>High Performance</subtitle><entry><title>线性、位置不变退化图像的复原基础</title><link href="https://artzers.github.io/tuxiangfuyuan/" rel="alternate" type="text/html" title="线性、位置不变退化图像的复原基础" /><published>2016-05-23T00:00:00+08:00</published><updated>2016-05-23T00:00:00+08:00</updated><id>https://artzers.github.io/tuxiangfuyuan</id><content type="html" xml:base="https://artzers.github.io/tuxiangfuyuan/">&lt;h1 id=&quot;centercenter&quot;&gt;&lt;center&gt;线性、位置不变退化图像的复原基础&lt;/center&gt;&lt;/h1&gt;
+&lt;p&gt;　　如果图像不仅包含噪声，还包含对原图的变化（退化），那么目标图像的函数为:&lt;img src=&quot;http://latex.codecogs.com/gif.latex?g(x,y)=h(f(x,y))+n(x,y)&quot; alt=&quot;&quot; /&gt;，其中h是图像退化函数。如果&lt;img src=&quot;http://latex.codecogs.com/gif.latex?h(af1(x,y)+bf2(x,y))=ah(f1(x,y))+ bh(f2(x,y))&quot; alt=&quot;&quot; /&gt;，那么说明退化函数是线性的；如果不考虑噪声，有&lt;img src=&quot;http://latex.codecogs.com/gif.latex?h(f(x+a,y+b))=g(x+a,y+b)&quot; alt=&quot;&quot; /&gt;，那么说明退化函数是位置不变的，目标图像像素的位置和原图的是同步的。我们如果能够去除噪声，然后取h退化函数的逆操作，那么就可以还原回原始图像。&lt;br /&gt;
+　　h退化函数可能是一个非常复杂的函数，局部空间滤波算子难以表示这种退化形式，亦难以求得逆变换对应的算子；而在频域上的则相对容易表示。二维数字图像是一种离散系统，每个像素点(a,b)可以表示为f(x,y)与δ(x-a,y-b)的卷积。在一维情况下有：&lt;img src=&quot;http://latex.codecogs.com/gif.latex?f(a)=\sum_{-\infty}^{\infty}f(x)\delta(x-a) \\
+　　g(a)=\sum_{-\infty}^{\infty}h[f(x)\delta(x-a)] = \sum_{-\infty}^{\infty}f(x)h[\delta(x-a)]&quot; alt=&quot;&quot; /&gt;
+　　注意这里h是线性位置不变的算子。经过类似变换，目标图像表示为&lt;img src=&quot;http://latex.codecogs.com/gif.latex?g(x,y)=f(x,y)*h(x,y)+n(x,y)&quot; alt=&quot;&quot; /&gt;，在频域下有&lt;img src=&quot;http://latex.codecogs.com/gif.latex?G(u,v)=F(u,v)H(u,v)+N(u,v)&quot; alt=&quot;&quot; /&gt;，这说明频域下图像复原是一个简单的初级运算，求得G就得到原图。但是实际使用的时候，我们很难得知噪声n和作用于原图的算子h，获取这些信息需要依靠工程师常年的经验和直觉。在获取噪声和作用于原图的算子信息之后，可以使用以下滤波方法复原图像:&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;逆滤波。当图像没有噪声或者可以忽略不计的时候，只需要对目标图像G乘以算子H的倒数即可求出原图F，有$F(u,v)=G(u,v)/H(u,v)$。这里要注意的是，很多情况下H算子包含大量零值或极小值的元素，这些元素的倒数是很大的值，使得H算子包含很大的功率。我们可以&lt;strong&gt;定义零值或极小值的元素的倒数为0；此外因为零值或极小值的元素一般位于高频区域，能量主要集中在低频区域，所以也可以使用低通滤波器对H算子进行一次滤波，然后再进行逆滤波&lt;/strong&gt;。&lt;/li&gt;
@@ -12,17 +10,17 @@
     &lt;table&gt;
       &lt;tbody&gt;
         &lt;tr&gt;
-          &lt;td&gt;最小均方误差滤波（维纳滤波），原理是最小化均方误差$e^2=E{f-\tilde{f} }$，公式有：\[ \tilde{F}(u,v)=\left[\frac{1}{H(u,v)}\frac{&lt;/td&gt;
+          &lt;td&gt;最小均方误差滤波（维纳滤波），原理是最小化均方误差&lt;img src=&quot;http://latex.codecogs.com/gif.latex?e^2=E\{f-\tilde{f} \}&quot; alt=&quot;&quot; /&gt;，公式有：![](http://latex.codecogs.com/gif.latex?\tilde{F}(u,v)=\left[\frac{1}{H(u,v)}\frac{&lt;/td&gt;
           &lt;td&gt;H(u,v)&lt;/td&gt;
           &lt;td&gt;^2}{&lt;/td&gt;
           &lt;td&gt;H(u,v)&lt;/td&gt;
-          &lt;td&gt;^2+S_\eta(u,v)/S_f(u,v)}\right]G(u,v) \]其中$&lt;/td&gt;
+          &lt;td&gt;^2+S_\eta(u,v)/S_f(u,v)}\right]G(u,v))其中![](http://latex.codecogs.com/gif.latex?&lt;/td&gt;
           &lt;td&gt;H&lt;/td&gt;
-          &lt;td&gt;^2=HH^*$表示H的功率谱，计算方法是共轭相乘。$S_f(u,v)=&lt;/td&gt;
+          &lt;td&gt;^2=HH^*)表示H的功率谱，计算方法是共轭相乘。![](http://latex.codecogs.com/gif.latex?S_f(u,v)=&lt;/td&gt;
           &lt;td&gt;F(u,v)&lt;/td&gt;
-          &lt;td&gt;^2$是原始图像功率谱，$S_\eta(u,v)=&lt;/td&gt;
+          &lt;td&gt;^2)是原始图像功率谱，![](http://latex.codecogs.com/gif.latex?S_\eta(u,v)=&lt;/td&gt;
           &lt;td&gt;\eta(u,v)&lt;/td&gt;
-          &lt;td&gt;^2$是噪声功率谱。噪声功率谱需要进行估计，当没有噪声时，维纳滤波退化为逆滤波。在实际工程中这些参数很难获取，因此使用受限；此外维纳滤波推导的条件是原图和噪声都是随机平稳过程数据，因此实际应用中，维纳滤波效果不尽人意就不奇怪了。&lt;/td&gt;
+          &lt;td&gt;^2)是噪声功率谱。噪声功率谱需要进行估计，当没有噪声时，维纳滤波退化为逆滤波。在实际工程中这些参数很难获取，因此使用受限；此外维纳滤波推导的条件是原图和噪声都是随机平稳过程数据，因此实际应用中，维纳滤波效果不尽人意就不奇怪了。&lt;/td&gt;
         &lt;/tr&gt;
       &lt;/tbody&gt;
     &lt;/table&gt;
@@ -31,25 +29,25 @@
     &lt;table&gt;
       &lt;tbody&gt;
         &lt;tr&gt;
-          &lt;td&gt;约束最小二乘滤波，公式：\[\hat{F}(u,v)=\left[\frac{H^*}{&lt;/td&gt;
+          &lt;td&gt;约束最小二乘滤波，公式：![](http://latex.codecogs.com/gif.latex?\hat{F}(u,v)=\left[\frac{H^*}{&lt;/td&gt;
           &lt;td&gt;H(u,v)&lt;/td&gt;
           &lt;td&gt;^2+\gamma&lt;/td&gt;
           &lt;td&gt;P(u,v)&lt;/td&gt;
-          &lt;td&gt;^2}\right]G(u,v) \]\[ p(x,y)=\left[\begin{matrix}0&amp;amp;-1&amp;amp;0\-1&amp;amp;4&amp;amp;-1\0&amp;amp;-1&amp;amp;0\end{matrix}\right]\]其中p是laplace算子，P是p算子的频域变换。为了获取$\gamma$的值，我们需要估计出图像噪声的均值和方差，然后计算出大概的噪声功率$&lt;/td&gt;
+          &lt;td&gt;^2}\right]G(u,v) \ p(x,y)=\left[\begin{matrix}0&amp;amp;-1&amp;amp;0\-1&amp;amp;4&amp;amp;-1\0&amp;amp;-1&amp;amp;0\end{matrix}\right])其中p是laplace算子，P是p算子的频域变换。为了获取$\gamma$的值，我们需要估计出图像噪声的均值和方差，然后计算出大概的噪声功率![](http://latex.codecogs.com/gif.latex?&lt;/td&gt;
           &lt;td&gt;\boldsymbol{\eta}&lt;/td&gt;
-          &lt;td&gt;^2=MN[\delta_\eta^2+m_\eta^2]$，然后进行如下迭代：&lt;/td&gt;
+          &lt;td&gt;^2=MN[\delta_\eta^2+m_\eta^2])，然后进行如下迭代：&lt;/td&gt;
         &lt;/tr&gt;
       &lt;/tbody&gt;
     &lt;/table&gt;
     &lt;ul&gt;
-      &lt;li&gt;计算偏差$R=G-H\hat{F}$，$r$是$R$的空间域变换形式。&lt;/li&gt;
+      &lt;li&gt;计算偏差![](http://latex.codecogs.com/gif.latex?R=G-H\hat{F}![](http://latex.codecogs.com/gif.latex?，r是$R$的空间域变换形式。&lt;/li&gt;
       &lt;li&gt;
         &lt;table&gt;
           &lt;tbody&gt;
             &lt;tr&gt;
-              &lt;td&gt;计算偏差功率$&lt;/td&gt;
+              &lt;td&gt;计算偏差功率![](http://latex.codecogs.com/gif.latex?&lt;/td&gt;
               &lt;td&gt;\boldsymbol{r}&lt;/td&gt;
-              &lt;td&gt;^2=\sum_{m=0}^{M-1}\sum_{n=0}^{N-1}r^2(x,y)$。&lt;/td&gt;
+              &lt;td&gt;^2=\sum_{m=0}^{M-1}\sum_{n=0}^{N-1}r^2(x,y))。&lt;/td&gt;
             &lt;/tr&gt;
           &lt;/tbody&gt;
         &lt;/table&gt;
@@ -58,32 +56,32 @@
         &lt;table&gt;
           &lt;tbody&gt;
             &lt;tr&gt;
-              &lt;td&gt;如果$&lt;/td&gt;
+              &lt;td&gt;如果![](http://latex.codecogs.com/gif.latex?&lt;/td&gt;
               &lt;td&gt;\boldsymbol{r}&lt;/td&gt;
               &lt;td&gt;^2 -&lt;/td&gt;
               &lt;td&gt;\boldsymbol{\eta}&lt;/td&gt;
-              &lt;td&gt;^2 &amp;lt; -a$则增加$\gamma$，$&lt;/td&gt;
+              &lt;td&gt;^2 &amp;lt; -a)则增加&lt;img src=&quot;http://latex.codecogs.com/gif.latex?\gamma&quot; alt=&quot;&quot; /&gt;，![](http://latex.codecogs.com/gif.latex?&lt;/td&gt;
               &lt;td&gt;\boldsymbol{r}&lt;/td&gt;
               &lt;td&gt;^2 -&lt;/td&gt;
               &lt;td&gt;\boldsymbol{\eta}&lt;/td&gt;
-              &lt;td&gt;^2 &amp;gt; a$则减小$\gamma$，然后从头执行。否则迭代收敛，$\gamma$达到最优，此时输出图像是最优复原图像。$a$是收敛阈值。&lt;/td&gt;
+              &lt;td&gt;^2 &amp;gt; a)则减小&lt;img src=&quot;http://latex.codecogs.com/gif.latex?\gamma&quot; alt=&quot;&quot; /&gt;，然后从头执行。否则迭代收敛，&lt;img src=&quot;http://latex.codecogs.com/gif.latex?\gamma&quot; alt=&quot;&quot; /&gt;达到最优，此时输出图像是最优复原图像。$a$是收敛阈值。&lt;/td&gt;
             &lt;/tr&gt;
           &lt;/tbody&gt;
         &lt;/table&gt;
       &lt;/li&gt;
     &lt;/ul&gt;
 
-    &lt;p&gt;整个迭代下降过程中，$\gamma$的变化幅度如何设定有很多方法，比如感知器方法、梯度下降法以及最小均算法。相比维纳滤波，只需要估计出噪声（与原始图像不相关）的均值和方差，这可以从目标图像中估计出来，因此该方法使用相对广泛。&lt;/p&gt;
+    &lt;p&gt;整个迭代下降过程中，&lt;img src=&quot;http://latex.codecogs.com/gif.latex?\gamma&quot; alt=&quot;&quot; /&gt;的变化幅度如何设定有很多方法，比如感知器方法、梯度下降法以及最小均算法。相比维纳滤波，只需要估计出噪声（与原始图像不相关）的均值和方差，这可以从目标图像中估计出来，因此该方法使用相对广泛。&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;table&gt;
       &lt;tbody&gt;
         &lt;tr&gt;
-          &lt;td&gt;几何均值滤波 $$\hat{F}(u,v)=\left[\frac{H^*(u,v)}{&lt;/td&gt;
+          &lt;td&gt;几何均值滤波 ![](http://latex.codecogs.com/gif.latex?\hat{F}(u,v)=\left[\frac{H^*(u,v)}{&lt;/td&gt;
           &lt;td&gt;H(u,v)&lt;/td&gt;
           &lt;td&gt;^2}\right]^\alpha\left[\frac{H^*(u,v)}{&lt;/td&gt;
           &lt;td&gt;H(u,v)&lt;/td&gt;
-          &lt;td&gt;^2+\beta[S_\eta(u,v)/S_f(u,v)]}\right]^{1-\alpha}G(u,v) $$其中$\alpha,\beta$是正实数，当$\alpha=1$，原式退化为逆滤波；当$\alpha=0,\beta=1$原式是标准维纳滤波。&lt;/td&gt;
+          &lt;td&gt;^2+\beta[S_\eta(u,v)/S_f(u,v)]}\right]^{1-\alpha}G(u,v))其中&lt;img src=&quot;http://latex.codecogs.com/gif.latex?\alpha,\beta&quot; alt=&quot;&quot; /&gt;是正实数，当&lt;img src=&quot;http://latex.codecogs.com/gif.latex?\alpha=1&quot; alt=&quot;&quot; /&gt;，原式退化为逆滤波；当&lt;img src=&quot;http://latex.codecogs.com/gif.latex?\alpha=0,\beta=1&quot; alt=&quot;&quot; /&gt;原式是标准维纳滤波。&lt;/td&gt;
         &lt;/tr&gt;
       &lt;/tbody&gt;
     &lt;/table&gt;
@@ -93,9 +91,9 @@
 &lt;p&gt;维纳滤波和约束最小二乘滤波推导较复杂，将在后续给出。&lt;/p&gt;
 
 &lt;p&gt;https://github.com/artzers/NGImageProcessor BaseImageRestore.py&lt;/p&gt;</content><summary>线性、位置不变退化图像的复原基础
-　　如果图像不仅包含噪声，还包含对原图的变化（退化），那么目标图像的函数为:$g(x,y)=h(f(x,y))+n(x,y)$，其中h是图像退化函数。如果$h(af1(x,y)+bf2(x,y))=ah(f1(x,y))+ bh(f2(x,y))$，那么说明退化函数是线性的；如果不考虑噪声，有$h(f(x+a,y+b))=g(x+a,y+b)$，那么说明退化函数是位置不变的，目标图像像素的位置和原图的是同步的。我们如果能够去除噪声，然后取h退化函数的逆操作，那么就可以还原回原始图像。
+　　如果图像不仅包含噪声，还包含对原图的变化（退化），那么目标图像的函数为:，其中h是图像退化函数。如果，那么说明退化函数是线性的；如果不考虑噪声，有，那么说明退化函数是位置不变的，目标图像像素的位置和原图的是同步的。我们如果能够去除噪声，然后取h退化函数的逆操作，那么就可以还原回原始图像。
 　　h退化函数可能是一个非常复杂的函数，局部空间滤波算子难以表示这种退化形式，亦难以求得逆变换对应的算子；而在频域上的则相对容易表示。二维数字图像是一种离散系统，每个像素点(a,b)可以表示为f(x,y)与δ(x-a,y-b)的卷积。在一维情况下有：
-　　注意这里h是线性位置不变的算子。经过类似变换，目标图像表示为$g(x,y)=f(x,y)*h(x,y)+n(x,y)$，在频域下有$G(u,v)=F(u,v)H(u,v)+N(u,v)$，这说明频域下图像复原是一个简单的初级运算，求得G就得到原图。但是实际使用的时候，我们很难得知噪声n和作用于原图的算子h，获取这些信息需要依靠工程师常年的经验和直觉。在获取噪声和作用于原图的算子信息之后，可以使用以下滤波方法复原图像:
+　　注意这里h是线性位置不变的算子。经过类似变换，目标图像表示为，在频域下有，这说明频域下图像复原是一个简单的初级运算，求得G就得到原图。但是实际使用的时候，我们很难得知噪声n和作用于原图的算子h，获取这些信息需要依靠工程师常年的经验和直觉。在获取噪声和作用于原图的算子信息之后，可以使用以下滤波方法复原图像:
 
 
   逆滤波。当图像没有噪声或者可以忽略不计的时候，只需要对目标图像G乘以算子H的倒数即可求出原图F，有$F(u,v)=G(u,v)/H(u,v)$。这里要注意的是，很多情况下H算子包含大量零值或极小值的元素，这些元素的倒数是很大的值，使得H算子包含很大的功率。我们可以定义零值或极小值的元素的倒数为0；此外因为零值或极小值的元素一般位于高频区域，能量主要集中在低频区域，所以也可以使用低通滤波器对H算子进行一次滤波，然后再进行逆滤波。
@@ -103,17 +101,17 @@
     
       
         
-          最小均方误差滤波（维纳滤波），原理是最小化均方误差$e^2=E{f-\tilde{f} }$，公式有：\[ \tilde{F}(u,v)=\left[\frac{1}{H(u,v)}\frac{
+          最小均方误差滤波（维纳滤波），原理是最小化均方误差，公式有：![](http://latex.codecogs.com/gif.latex?\tilde{F}(u,v)=\left[\frac{1}{H(u,v)}\frac{
           H(u,v)
           ^2}{
           H(u,v)
-          ^2+S_\eta(u,v)/S_f(u,v)}\right]G(u,v) \]其中$
+          ^2+S_\eta(u,v)/S_f(u,v)}\right]G(u,v))其中![](http://latex.codecogs.com/gif.latex?
           H
-          ^2=HH^*$表示H的功率谱，计算方法是共轭相乘。$S_f(u,v)=
+          ^2=HH^*)表示H的功率谱，计算方法是共轭相乘。![](http://latex.codecogs.com/gif.latex?S_f(u,v)=
           F(u,v)
-          ^2$是原始图像功率谱，$S_\eta(u,v)=
+          ^2)是原始图像功率谱，![](http://latex.codecogs.com/gif.latex?S_\eta(u,v)=
           \eta(u,v)
-          ^2$是噪声功率谱。噪声功率谱需要进行估计，当没有噪声时，维纳滤波退化为逆滤波。在实际工程中这些参数很难获取，因此使用受限；此外维纳滤波推导的条件是原图和噪声都是随机平稳过程数据，因此实际应用中，维纳滤波效果不尽人意就不奇怪了。
+          ^2)是噪声功率谱。噪声功率谱需要进行估计，当没有噪声时，维纳滤波退化为逆滤波。在实际工程中这些参数很难获取，因此使用受限；此外维纳滤波推导的条件是原图和噪声都是随机平稳过程数据，因此实际应用中，维纳滤波效果不尽人意就不奇怪了。
         
       
     
@@ -122,25 +120,25 @@
     
       
         
-          约束最小二乘滤波，公式：\[\hat{F}(u,v)=\left[\frac{H^*}{
+          约束最小二乘滤波，公式：![](http://latex.codecogs.com/gif.latex?\hat{F}(u,v)=\left[\frac{H^*}{
           H(u,v)
           ^2+\gamma
           P(u,v)
-          ^2}\right]G(u,v) \]\[ p(x,y)=\left[\begin{matrix}0&amp;amp;-1&amp;amp;0\-1&amp;amp;4&amp;amp;-1\0&amp;amp;-1&amp;amp;0\end{matrix}\right]\]其中p是laplace算子，P是p算子的频域变换。为了获取$\gamma$的值，我们需要估计出图像噪声的均值和方差，然后计算出大概的噪声功率$
+          ^2}\right]G(u,v) \ p(x,y)=\left[\begin{matrix}0&amp;amp;-1&amp;amp;0\-1&amp;amp;4&amp;amp;-1\0&amp;amp;-1&amp;amp;0\end{matrix}\right])其中p是laplace算子，P是p算子的频域变换。为了获取$\gamma$的值，我们需要估计出图像噪声的均值和方差，然后计算出大概的噪声功率![](http://latex.codecogs.com/gif.latex?
           \boldsymbol{\eta}
-          ^2=MN[\delta_\eta^2+m_\eta^2]$，然后进行如下迭代：
+          ^2=MN[\delta_\eta^2+m_\eta^2])，然后进行如下迭代：
         
       
     
     
-      计算偏差$R=G-H\hat{F}$，$r$是$R$的空间域变换形式。
+      计算偏差![](http://latex.codecogs.com/gif.latex?R=G-H\hat{F}![](http://latex.codecogs.com/gif.latex?，r是$R$的空间域变换形式。
       
         
           
             
-              计算偏差功率$
+              计算偏差功率![](http://latex.codecogs.com/gif.latex?
               \boldsymbol{r}
-              ^2=\sum_{m=0}^{M-1}\sum_{n=0}^{N-1}r^2(x,y)$。
+              ^2=\sum_{m=0}^{M-1}\sum_{n=0}^{N-1}r^2(x,y))。
             
           
         
@@ -149,32 +147,32 @@
         
           
             
-              如果$
-              \boldsymbol{r}
-              ^2 -
-              \boldsymbol{\eta}
-              ^2 &amp;lt; -a$则增加$\gamma$，$
+              如果![](http://latex.codecogs.com/gif.latex?
               \boldsymbol{r}
               ^2 -
               \boldsymbol{\eta}
-              ^2 &amp;gt; a$则减小$\gamma$，然后从头执行。否则迭代收敛，$\gamma$达到最优，此时输出图像是最优复原图像。$a$是收敛阈值。
+              ^2 &amp;lt; -a)则增加，![](http://latex.codecogs.com/gif.latex?
+              \boldsymbol{r}
+              ^2 -
+              \boldsymbol{\eta}
+              ^2 &amp;gt; a)则减小，然后从头执行。否则迭代收敛，达到最优，此时输出图像是最优复原图像。$a$是收敛阈值。
             
           
         
       
     
 
-    整个迭代下降过程中，$\gamma$的变化幅度如何设定有很多方法，比如感知器方法、梯度下降法以及最小均算法。相比维纳滤波，只需要估计出噪声（与原始图像不相关）的均值和方差，这可以从目标图像中估计出来，因此该方法使用相对广泛。
+    整个迭代下降过程中，的变化幅度如何设定有很多方法，比如感知器方法、梯度下降法以及最小均算法。相比维纳滤波，只需要估计出噪声（与原始图像不相关）的均值和方差，这可以从目标图像中估计出来，因此该方法使用相对广泛。
   
   
     
       
         
-          几何均值滤波 $$\hat{F}(u,v)=\left[\frac{H^*(u,v)}{
+          几何均值滤波 ![](http://latex.codecogs.com/gif.latex?\hat{F}(u,v)=\left[\frac{H^*(u,v)}{
           H(u,v)
           ^2}\right]^\alpha\left[\frac{H^*(u,v)}{
           H(u,v)
-          ^2+\beta[S_\eta(u,v)/S_f(u,v)]}\right]^{1-\alpha}G(u,v) $$其中$\alpha,\beta$是正实数，当$\alpha=1$，原式退化为逆滤波；当$\alpha=0,\beta=1$原式是标准维纳滤波。</summary></entry><entry><title>You’re up and running!</title><link href="https://artzers.github.io/Hello-World/" rel="alternate" type="text/html" title="You&#39;re up and running!" /><published>2014-03-03T00:00:00+08:00</published><updated>2014-03-03T00:00:00+08:00</updated><id>https://artzers.github.io/Hello-World</id><content type="html" xml:base="https://artzers.github.io/Hello-World/">&lt;p&gt;Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).&lt;/p&gt;
+          ^2+\beta[S_\eta(u,v)/S_f(u,v)]}\right]^{1-\alpha}G(u,v))其中是正实数，当，原式退化为逆滤波；当原式是标准维纳滤波。</summary></entry><entry><title>You’re up and running!</title><link href="https://artzers.github.io/Hello-World/" rel="alternate" type="text/html" title="You&#39;re up and running!" /><published>2014-03-03T00:00:00+08:00</published><updated>2014-03-03T00:00:00+08:00</updated><id>https://artzers.github.io/Hello-World</id><content type="html" xml:base="https://artzers.github.io/Hello-World/">&lt;p&gt;Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/config.png&quot; alt=&quot;_config.yml&quot; /&gt;&lt;/p&gt;
 
