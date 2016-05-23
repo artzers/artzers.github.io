@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>线性、位置不变退化图像的复原基础 – artzers – High Performance</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="
+
+
+
+线性、位置不变退化图像的复原基础
+　　如果图像不仅包含噪声，还包含对原图的变化（退化），那么目标图像的函数为:\(g(x,y)=h(f(x,y))+n(x,y)\)，其中h是图像退化函数。如果\(h(af1(x,y)+bf2(x,y))=ah(f1(x,y))+ bh(f2(x,y))\)，那么说明退化函数是线性的；如果不考虑噪声，有\(h(f(x+a,y+b))=g(x+a,y+b)\)，那么说明退化函数是位置不变的，目标图像像素的位置和原图的是同步的。我们如果能够去除噪声，然后取h退化函数的逆操作，那么就可以还原回原始图像。
+　　h退化函数可能是一个非常复杂的函数，局部空间滤波算子难以表示这种退化形式，亦难以求得逆变换对应的算子；而在频域上的则相对容易表示。二维数字图像是一种离散系统，每个像素点(a,b)可以表示为f(x,y)与δ(x-a,y-b)的卷积。在一维情况下有：\[f(a)=\sum_{-\infty}^{\infty}f(x)\delta(x-a) 
+　　g(a)=\sum_{-\infty}^{\infty}h[f(x)\delta(x-a)] = \sum_{-\infty}^{\infty}f(x)h[\delta(x-a)] \]
+　　注意这里h是线性位置不变的算子。经过类似变换，目标图像表示为(g(x,y)=f(x,y)*h(x,y)+n(x,y))，在频域下有\(G(u,v)=F(u,v)H(u,v)+N(u,v)\)，这说明频域下图像复原是一个简单的初级运算，求得G就得到原图。但是实际使用的时候，我们很难得知噪声n和作用于原图的算子h，获取这些信息需要依靠工程师常年的经验和直觉。在获取噪声和作用于原图的算子信息之后，可以使用以下滤波方法复原图像:
+
+
+  逆滤波。当图像没有噪声或者可以忽略不计的时候，只需要对目标图像G乘以算子H的倒数即可求出原图F，有\(F(u,v)=G(u,v)/H(u,v)\)。这里要注意的是，很多情况下H算子包含大量零值或极小值的元素，这些元素的倒数是很大的值，使得H算子包含很大的功率。我们可以定义零值或极小值的元素的倒数为0；此外因为零值或极小值的元素一般位于高频区域，能量主要集中在低频区域，所以也可以使用低通滤波器对H算子进行一次滤波，然后再进行逆滤波。
+  最小均方误差滤波（维纳滤波），原理是最小化均方误差
+\(e^2=E{f-\tilde{f}} \)，公式有：\(\tilde{F}(u,v)=\left[\frac{1}{H(u,v)}\frac{|H(u,v)|^2}{|H(u,v)|^2+S_\eta(u,v)/S_f(u,v)}\right]G(u,v)\)
+其中\(|H|^2=HH^*\)表示H的功率谱，计算方法是共轭相乘。\(S_f(u,v)=|F(u,v)|^2\)是原始图像功率谱，\(S_\eta(u,v)=|\eta(u,v)|^2\)是噪声功率谱。噪声功率谱需要进行估计，当没有噪声时，维纳滤波退化为逆滤波。在实际工程中这些参数很难获取，因此使用受限；此外维纳滤波推导的条件是原图和噪声都是随机平稳过程数据，因此实际应用中，维纳滤波效果不尽人意就不奇怪了。
+  约束最小二乘滤波，公式：
+\[\hat{F}(u,v)=\left[\frac{H^*}{|H(u,v)|^2+\gamma|P(u,v)|^2}\right]G(u,v) \]\[ p(x,y)=\begin{bmatrix} 0 &amp; -1 &amp; 0 \ -1 &amp; 4 &amp; -1 \ 0 &amp; -1 &amp; 0 \end{bmatrix}\]
+其中p是laplace算子，P是p算子的频域变换。为了获取\(\gamma\)的值，我们需要估计出图像噪声的均值和方差，然后计算出大概的噪声功率\(|\boldsymbol{\eta}|^2=MN[\delta_\eta^2+m_\eta^2]\)，然后进行如下迭代：
+  计算偏差\(R=G-H\hat{F}\)，\(r\)是\(R\)的空间域变换形式。
+  计算偏差功率
+\(|\boldsymbol{r}|^2=\sum_{m=0}^{M-1}\sum_{n=0}^{N-1}r^2(x,y)\)。
+  如果
+\(|\boldsymbol{r}|^2 - |\boldsymbol{\eta}|^2 &lt; -a\)则增加\(\gamma\)，\(|\boldsymbol{r}|^2 - |\boldsymbol{\eta}|^2 &gt; a\)
+则减小\(\gamma\)，然后从头执行。否则迭代收敛，\(\gamma\)达到最优，此时输出图像是最优复原图像。\(a\)是收敛阈值。整个迭代下降过程中，\(\gamma\)的变化幅度如何设定有很多方法，比如感知器方法、梯度下降法以及最小均算法。相比维纳滤波，只需要估计出噪声（与原始图像不相关）的均值和方差，这可以从目标图像中估计出来，因此该方法使用相对广泛。
+  几何均值滤波 
+\(\hat{F}(u,v)=\)
+\[\left[\frac{H^(u,v)}{|H(u,v)|^2}\right]^\alpha\]
+\(\left[\frac{H^(u,v)}{|H(u,v)|^2+\beta[S_\eta(u,v)/S_f(u,v)]}\right]^{1-\alpha}G(u,v)\)
+其中\(\alpha,\beta\)是正实数，当$\(alpha=1\)，原式退化为逆滤波；当\(\alpha=0,\beta=1\)原式是标准维纳滤波。
+
+
+" />
+    <meta property="og:description" content="
+
+
+
+线性、位置不变退化图像的复原基础
+　　如果图像不仅包含噪声，还包含对原图的变化（退化），那么目标图像的函数为:\(g(x,y)=h(f(x,y))+n(x,y)\)，其中h是图像退化函数。如果\(h(af1(x,y)+bf2(x,y))=ah(f1(x,y))+ bh(f2(x,y))\)，那么说明退化函数是线性的；如果不考虑噪声，有\(h(f(x+a,y+b))=g(x+a,y+b)\)，那么说明退化函数是位置不变的，目标图像像素的位置和原图的是同步的。我们如果能够去除噪声，然后取h退化函数的逆操作，那么就可以还原回原始图像。
+　　h退化函数可能是一个非常复杂的函数，局部空间滤波算子难以表示这种退化形式，亦难以求得逆变换对应的算子；而在频域上的则相对容易表示。二维数字图像是一种离散系统，每个像素点(a,b)可以表示为f(x,y)与δ(x-a,y-b)的卷积。在一维情况下有：\[f(a)=\sum_{-\infty}^{\infty}f(x)\delta(x-a) 
+　　g(a)=\sum_{-\infty}^{\infty}h[f(x)\delta(x-a)] = \sum_{-\infty}^{\infty}f(x)h[\delta(x-a)] \]
+　　注意这里h是线性位置不变的算子。经过类似变换，目标图像表示为(g(x,y)=f(x,y)*h(x,y)+n(x,y))，在频域下有\(G(u,v)=F(u,v)H(u,v)+N(u,v)\)，这说明频域下图像复原是一个简单的初级运算，求得G就得到原图。但是实际使用的时候，我们很难得知噪声n和作用于原图的算子h，获取这些信息需要依靠工程师常年的经验和直觉。在获取噪声和作用于原图的算子信息之后，可以使用以下滤波方法复原图像:
+
+
+  逆滤波。当图像没有噪声或者可以忽略不计的时候，只需要对目标图像G乘以算子H的倒数即可求出原图F，有\(F(u,v)=G(u,v)/H(u,v)\)。这里要注意的是，很多情况下H算子包含大量零值或极小值的元素，这些元素的倒数是很大的值，使得H算子包含很大的功率。我们可以定义零值或极小值的元素的倒数为0；此外因为零值或极小值的元素一般位于高频区域，能量主要集中在低频区域，所以也可以使用低通滤波器对H算子进行一次滤波，然后再进行逆滤波。
+  最小均方误差滤波（维纳滤波），原理是最小化均方误差
+\(e^2=E{f-\tilde{f}} \)，公式有：\(\tilde{F}(u,v)=\left[\frac{1}{H(u,v)}\frac{|H(u,v)|^2}{|H(u,v)|^2+S_\eta(u,v)/S_f(u,v)}\right]G(u,v)\)
+其中\(|H|^2=HH^*\)表示H的功率谱，计算方法是共轭相乘。\(S_f(u,v)=|F(u,v)|^2\)是原始图像功率谱，\(S_\eta(u,v)=|\eta(u,v)|^2\)是噪声功率谱。噪声功率谱需要进行估计，当没有噪声时，维纳滤波退化为逆滤波。在实际工程中这些参数很难获取，因此使用受限；此外维纳滤波推导的条件是原图和噪声都是随机平稳过程数据，因此实际应用中，维纳滤波效果不尽人意就不奇怪了。
+  约束最小二乘滤波，公式：
+\[\hat{F}(u,v)=\left[\frac{H^*}{|H(u,v)|^2+\gamma|P(u,v)|^2}\right]G(u,v) \]\[ p(x,y)=\begin{bmatrix} 0 &amp; -1 &amp; 0 \ -1 &amp; 4 &amp; -1 \ 0 &amp; -1 &amp; 0 \end{bmatrix}\]
+其中p是laplace算子，P是p算子的频域变换。为了获取\(\gamma\)的值，我们需要估计出图像噪声的均值和方差，然后计算出大概的噪声功率\(|\boldsymbol{\eta}|^2=MN[\delta_\eta^2+m_\eta^2]\)，然后进行如下迭代：
+  计算偏差\(R=G-H\hat{F}\)，\(r\)是\(R\)的空间域变换形式。
+  计算偏差功率
+\(|\boldsymbol{r}|^2=\sum_{m=0}^{M-1}\sum_{n=0}^{N-1}r^2(x,y)\)。
+  如果
+\(|\boldsymbol{r}|^2 - |\boldsymbol{\eta}|^2 &lt; -a\)则增加\(\gamma\)，\(|\boldsymbol{r}|^2 - |\boldsymbol{\eta}|^2 &gt; a\)
+则减小\(\gamma\)，然后从头执行。否则迭代收敛，\(\gamma\)达到最优，此时输出图像是最优复原图像。\(a\)是收敛阈值。整个迭代下降过程中，\(\gamma\)的变化幅度如何设定有很多方法，比如感知器方法、梯度下降法以及最小均算法。相比维纳滤波，只需要估计出噪声（与原始图像不相关）的均值和方差，这可以从目标图像中估计出来，因此该方法使用相对广泛。
+  几何均值滤波 
+\(\hat{F}(u,v)=\)
+\[\left[\frac{H^(u,v)}{|H(u,v)|^2}\right]^\alpha\]
+\(\left[\frac{H^(u,v)}{|H(u,v)|^2+\beta[S_\eta(u,v)/S_f(u,v)]}\right]^{1-\alpha}G(u,v)\)
+其中\(\alpha,\beta\)是正实数，当$\(alpha=1\)，原式退化为逆滤波；当\(\alpha=0,\beta=1\)原式是标准维纳滤波。
+
+
+" />
+    
+    <meta name="author" content="artzers" />
+
+    
+    <meta property="og:title" content="线性、位置不变退化图像的复原基础" />
+    <meta property="twitter:title" content="线性、位置不变退化图像的复原基础" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="artzers - High Performance" href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/12832290?v=3&u=446a9bc4f121f2d3e0f7ef4821892c5cac92d264&s=140" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">artzers</a></h1>
+            <p class="site-description">High Performance</p>
+          </div>
+
+          <nav>
+            <a href="/">Blog</a>
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <script type="text/x-mathjax-config"> 
+MathJax.Hub.Config({ 
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]} 
+}); 
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<h3 id="centercenter"><center>线性、位置不变退化图像的复原基础</center></h3>
+<p>　　如果图像不仅包含噪声，还包含对原图的变化（退化），那么目标图像的函数为:\(g(x,y)=h(f(x,y))+n(x,y)\)，其中h是图像退化函数。如果\(h(af1(x,y)+bf2(x,y))=ah(f1(x,y))+ bh(f2(x,y))\)，那么说明退化函数是线性的；如果不考虑噪声，有\(h(f(x+a,y+b))=g(x+a,y+b)\)，那么说明退化函数是位置不变的，目标图像像素的位置和原图的是同步的。我们如果能够去除噪声，然后取h退化函数的逆操作，那么就可以还原回原始图像。<br />
+　　h退化函数可能是一个非常复杂的函数，局部空间滤波算子难以表示这种退化形式，亦难以求得逆变换对应的算子；而在频域上的则相对容易表示。二维数字图像是一种离散系统，每个像素点(a,b)可以表示为f(x,y)与δ(x-a,y-b)的卷积。在一维情况下有：\[f(a)=\sum_{-\infty}^{\infty}f(x)\delta(x-a) <br />
+　　g(a)=\sum_{-\infty}^{\infty}h[f(x)\delta(x-a)] = \sum_{-\infty}^{\infty}f(x)h[\delta(x-a)] \]
+　　注意这里h是线性位置不变的算子。经过类似变换，目标图像表示为(g(x,y)=f(x,y)*h(x,y)+n(x,y))，在频域下有\(G(u,v)=F(u,v)H(u,v)+N(u,v)\)，这说明频域下图像复原是一个简单的初级运算，求得G就得到原图。但是实际使用的时候，我们很难得知噪声n和作用于原图的算子h，获取这些信息需要依靠工程师常年的经验和直觉。在获取噪声和作用于原图的算子信息之后，可以使用以下滤波方法复原图像:</p>
+
+<ul>
+  <li>逆滤波。当图像没有噪声或者可以忽略不计的时候，只需要对目标图像G乘以算子H的倒数即可求出原图F，有\(F(u,v)=G(u,v)/H(u,v)\)。这里要注意的是，很多情况下H算子包含大量零值或极小值的元素，这些元素的倒数是很大的值，使得H算子包含很大的功率。我们可以<strong>定义零值或极小值的元素的倒数为0；此外因为零值或极小值的元素一般位于高频区域，能量主要集中在低频区域，所以也可以使用低通滤波器对H算子进行一次滤波，然后再进行逆滤波</strong>。</li>
+  <li>最小均方误差滤波（维纳滤波），原理是最小化均方误差
+\(e^2=E{f-\tilde{f}} \)，公式有：\(\tilde{F}(u,v)=\left[\frac{1}{H(u,v)}\frac{|H(u,v)|^2}{|H(u,v)|^2+S_\eta(u,v)/S_f(u,v)}\right]G(u,v)\)
+其中\(|H|^2=HH^*\)表示H的功率谱，计算方法是共轭相乘。\(S_f(u,v)=|F(u,v)|^2\)是原始图像功率谱，\(S_\eta(u,v)=|\eta(u,v)|^2\)是噪声功率谱。噪声功率谱需要进行估计，当没有噪声时，维纳滤波退化为逆滤波。在实际工程中这些参数很难获取，因此使用受限；此外维纳滤波推导的条件是原图和噪声都是随机平稳过程数据，因此实际应用中，维纳滤波效果不尽人意就不奇怪了。</li>
+  <li>约束最小二乘滤波，公式：
+\[\hat{F}(u,v)=\left[\frac{H^*}{|H(u,v)|^2+\gamma|P(u,v)|^2}\right]G(u,v) \]\[ p(x,y)=\begin{bmatrix} 0 &amp; -1 &amp; 0 \ -1 &amp; 4 &amp; -1 \ 0 &amp; -1 &amp; 0 \end{bmatrix}\]
+其中p是laplace算子，P是p算子的频域变换。为了获取\(\gamma\)的值，我们需要估计出图像噪声的均值和方差，然后计算出大概的噪声功率\(|\boldsymbol{\eta}|^2=MN[\delta_\eta^2+m_\eta^2]\)，然后进行如下迭代：</li>
+  <li>计算偏差\(R=G-H\hat{F}\)，\(r\)是\(R\)的空间域变换形式。</li>
+  <li>计算偏差功率
+\(|\boldsymbol{r}|^2=\sum_{m=0}^{M-1}\sum_{n=0}^{N-1}r^2(x,y)\)。</li>
+  <li>如果
+\(|\boldsymbol{r}|^2 - |\boldsymbol{\eta}|^2 &lt; -a\)则增加\(\gamma\)，\(|\boldsymbol{r}|^2 - |\boldsymbol{\eta}|^2 &gt; a\)
+则减小\(\gamma\)，然后从头执行。否则迭代收敛，\(\gamma\)达到最优，此时输出图像是最优复原图像。\(a\)是收敛阈值。整个迭代下降过程中，\(\gamma\)的变化幅度如何设定有很多方法，比如感知器方法、梯度下降法以及最小均算法。相比维纳滤波，只需要估计出噪声（与原始图像不相关）的均值和方差，这可以从目标图像中估计出来，因此该方法使用相对广泛。</li>
+  <li>
+    <p>几何均值滤波 
+\(\hat{F}(u,v)=\)<br />
+\[\left[\frac{H^<em>(u,v)}{|H(u,v)|^2}\right]^\alpha\]
+\(\left[\frac{H^</em>(u,v)}{|H(u,v)|^2+\beta[S_\eta(u,v)/S_f(u,v)]}\right]^{1-\alpha}G(u,v)\)
+其中\(\alpha,\beta\)是正实数，当$\(alpha=1\)，原式退化为逆滤波；当\(\alpha=0,\beta=1\)原式是标准维纳滤波。</p>
+
+    <p>维纳滤波和约束最小二乘滤波推导较复杂，将在后续给出。</p>
+  </li>
+</ul>
+
+<p>https://github.com/artzers/NGImageProcessor BaseImageRestore.py</p>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
