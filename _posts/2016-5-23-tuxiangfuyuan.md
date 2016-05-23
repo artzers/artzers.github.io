@@ -1,9 +1,8 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 ---
 layout: default
 title: 线性、位置不变退化图像的复原基础
 ---
-
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 # <center>线性、位置不变退化图像的复原基础</center>
 　　如果图像不仅包含噪声，还包含对原图的变化（退化），那么目标图像的函数为:$g(x,y)=h(f(x,y))+n(x,y)$，其中h是图像退化函数。如果$h(af1(x,y)+bf2(x,y))=ah(f1(x,y))+ bh(f2(x,y))$，那么说明退化函数是线性的；如果不考虑噪声，有$h(f(x+a,y+b))=g(x+a,y+b)$，那么说明退化函数是位置不变的，目标图像像素的位置和原图的是同步的。我们如果能够去除噪声，然后取h退化函数的逆操作，那么就可以还原回原始图像。  
 　　h退化函数可能是一个非常复杂的函数，局部空间滤波算子难以表示这种退化形式，亦难以求得逆变换对应的算子；而在频域上的则相对容易表示。二维数字图像是一种离散系统，每个像素点(a,b)可以表示为f(x,y)与δ(x-a,y-b)的卷积。在一维情况下有：$$f(a)=\sum_{-\infty}^{\infty}f(x)\delta(x-a) \\
