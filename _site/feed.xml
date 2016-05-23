@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.1.6">Jekyll</generator><link href="https://artzers.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://artzers.github.io/" rel="alternate" type="text/html" /><updated>2016-05-24T01:11:17+08:00</updated><id>https://artzers.github.io/</id><title>artzers</title><subtitle>High Performance</subtitle><entry><title>HAHA</title><link href="https://artzers.github.io/HAHA/" rel="alternate" type="text/html" title="HAHA" /><published>2015-03-03T00:00:00+08:00</published><updated>2015-03-03T00:00:00+08:00</updated><id>https://artzers.github.io/HAHA</id><content type="html" xml:base="https://artzers.github.io/HAHA/">&lt;p&gt;#Just a Test&lt;br /&gt;
+haha&lt;br /&gt;
+- a&lt;br /&gt;
+- b&lt;/p&gt;</content><summary>#Just a Test
+haha
+- a
+- b</summary></entry><entry><title>You’re up and running!</title><link href="https://artzers.github.io/Hello-World/" rel="alternate" type="text/html" title="You&#39;re up and running!" /><published>2014-03-03T00:00:00+08:00</published><updated>2014-03-03T00:00:00+08:00</updated><id>https://artzers.github.io/Hello-World</id><content type="html" xml:base="https://artzers.github.io/Hello-World/">&lt;p&gt;Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/config.png&quot; alt=&quot;_config.yml&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The easiest way to make your first post is to edit this one. Go into /_posts/ and update the Hello World markdown file. For more instructions head over to the &lt;a href=&quot;https://github.com/barryclark/jekyll-now&quot;&gt;Jekyll Now repository&lt;/a&gt; on GitHub.&lt;/p&gt;</content><summary>Next you can update your site name, avatar and other options using the _config.yml file in the root of your repository (shown below).</summary></entry></feed>
